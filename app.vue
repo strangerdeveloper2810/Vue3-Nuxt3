@@ -22,72 +22,76 @@
 
 // SEO & Meta tags cho toàn bộ app
 useHead({
-  titleTemplate: '%s - CyberFlix',
+  titleTemplate: "%s - CyberFlix",
   meta: [
-    { charset: 'utf-8' },
-    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { name: 'format-detection', content: 'telephone=no' },
-    { name: 'theme-color', content: '#1f2937' },
-    { property: 'og:type', content: 'website' },
-    { property: 'og:site_name', content: 'CyberFlix' },
-    { name: 'twitter:card', content: 'summary_large_image' }
+    { charset: "utf-8" },
+    { name: "viewport", content: "width=device-width, initial-scale=1" },
+    { name: "format-detection", content: "telephone=no" },
+    { name: "theme-color", content: "#1f2937" },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "CyberFlix" },
+    { name: "twitter:card", content: "summary_large_image" },
   ],
   link: [
-    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-    { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
-  ]
-})
+    { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: "/apple-touch-icon.png",
+    },
+  ],
+});
 
 // 🎨 Global color mode (dark/light theme)
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 
 // Set default theme
 onMounted(() => {
   // Force dark mode for now (có thể thêm toggle sau)
-  colorMode.preference = 'dark'
-})
+  colorMode.preference = "dark";
+});
 
 // 🔐 Global auth state check
 const checkAuthStatus = async () => {
-  const token = useCookie('token')
+  const token = useCookie("token");
 
   if (token.value) {
     try {
       // Validate token on app start
-      const { getUserInfo } = useApi()
-      await getUserInfo()
+      const { getUserInfo } = useApi();
+      await getUserInfo();
     } catch {
       // Token expired, clear it
-      console.warn('Token expired, clearing auth')
-      token.value = null
+      console.warn("Token expired, clearing auth");
+      token.value = null;
     }
   }
-}
+};
 
 // 🚀 App initialization
 onMounted(async () => {
-  await checkAuthStatus()
+  await checkAuthStatus();
 
   // Add any global event listeners
   // Performance monitoring, analytics, etc.
-})
+});
 
 // 🧹 Global error handling
 const handleGlobalError = (error: Error) => {
-  console.error('Global error:', error)
-  const toast = useAppToast()
-  toast.error('Đã có lỗi xảy ra', 'Vui lòng thử lại sau')
-}
+  console.error("Global error:", error);
+  const toast = useAppToast();
+  toast.error("Đã có lỗi xảy ra", "Vui lòng thử lại sau");
+};
 
 // Register global error handler
 if (import.meta.client) {
-  window.addEventListener('error', (event) => {
-    handleGlobalError(event.error)
-  })
+  window.addEventListener("error", (event) => {
+    handleGlobalError(event.error);
+  });
 
-  window.addEventListener('unhandledrejection', (event) => {
-    handleGlobalError(new Error(event.reason))
-  })
+  window.addEventListener("unhandledrejection", (event) => {
+    handleGlobalError(new Error(event.reason));
+  });
 }
 </script>
 
@@ -106,7 +110,8 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
   background-color: var(--color-background);
   color: white;
   line-height: 1.6;
@@ -168,5 +173,13 @@ body {
 
 .aspect-poster {
   aspect-ratio: 2 / 3;
+}
+
+/* Global cursor pointer for all buttons */
+button,
+[type="button"],
+[type="submit"],
+.ui-button {
+  cursor: pointer;
 }
 </style>

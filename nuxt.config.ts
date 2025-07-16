@@ -18,6 +18,12 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
   ],
 
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag.startsWith("my-"),
+    },
+  },
+
   // Vite Configuration
   vite: {
     plugins: [tailwindcss()],
