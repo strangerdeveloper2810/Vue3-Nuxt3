@@ -126,45 +126,45 @@ import type { NavItem, User } from '~/types'
 const mobileMenuOpen = ref(false)
 const user = ref<User | null>(null)
 
+// Check auth on mount and when token changes
+const token = useCookie('token')
+
+async function fetchUser() {
+    if (token.value) {
+        try {
+            const { getUserInfo } = useApi()
+            user.value = await getUserInfo()
+        } catch {
+            user.value = null
+            token.value = null
+        }
+    } else {
+        user.value = null
+    }
+}
+
+onMounted(fetchUser)
+watch(token, fetchUser)
+
+const handleLogout = () => {
+    token.value = null
+    user.value = null
+    window.location.reload()
+}
+
 // 🔗 Navigation items
 const navItems: NavItem[] = [
     { label: 'Trang chủ', to: '/' },
     { label: 'Phim', to: '/movies' },
     { label: 'Rạp chiếu', to: '/cinemas' },
-    { label: 'Khuyến mãi', to: '/promotions' }
+    { label: 'Khuyến mãi', to: '/promotions' },
+    { label: 'Middleware Demo', to: '/middleware-demo' }
 ]
 
 // 🎯 Methods
 const toggleMobileMenu = () => {
     mobileMenuOpen.value = !mobileMenuOpen.value
 }
-
-const handleLogout = () => {
-    // Clear token cookie
-    const token = useCookie('token')
-    token.value = null
-
-    // Clear user data
-    user.value = null
-
-    // Redirect to home
-    navigateTo('/')
-}
-
-// 🔄 Lifecycle (giống useEffect)
-onMounted(async () => {
-    // Check if user is logged in
-    const token = useCookie('token')
-    if (token.value) {
-        try {
-            const { getUserInfo } = useApi()
-            user.value = await getUserInfo()
-        } catch {
-            // Token might be expired, clear it
-            token.value = null
-        }
-    }
-})
 
 // 🧩 Meta tags for SEO
 useHead({
